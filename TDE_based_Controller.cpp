@@ -11,10 +11,6 @@
 using namespace cv;
 using namespace std;
 
-double h = 0.050; // Memory step
-queue<double> Func1, Func2; // Memory of the function value 
-double N_memory = 100; // can be adjusted
-
 // Time-delay control gain-adapting laws
 void Dynamic::ATDC_adaptive_law(double & tracking_error)
 {
