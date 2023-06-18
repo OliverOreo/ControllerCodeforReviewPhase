@@ -27,6 +27,6 @@ public:
 	~Dynamic();
 	// Time-delay control 的参数自适应更新率
 	void ATDC_adaptive_law(double & tracking_error);
-	// 计算输入电流
+	// Calculation of control input
 	double ATDC(double & tracking_error);
 }
