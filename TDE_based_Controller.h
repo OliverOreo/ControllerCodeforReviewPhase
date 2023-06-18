@@ -24,8 +24,8 @@ public:
 	double eta = 0.0, kappa = 0.0;
 	double kappa1 = 0.0, kappa2 = 0.0;
 	double p = 0.0, q = 0.0;
-	double GL_sum_s = 0.0, GL_sum_phi; // Riemann-Liouville 导数的积分
-	double tau = 0.0; // 控制输入
+	double GL_sum_s = 0.0, GL_sum_phi; // Grunwald-Letnikov fractional derivative
+	double tau = 0.0; // Control input
 public:
 	Dynamic();
 	~Dynamic();
