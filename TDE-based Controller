@@ -1,0 +1,39 @@
+// Time-delay control 的参数自适应更新率
+void Dynamic::ATDC_adaptive_law(double & tracking_error)
+{
+	RL_sum_s += lambda1*tgamma(1 - r1)* pow(fabs(tracking_error), alpha1)*Sign(tracking_error) / pow(Ts, 1 - r1)*Ts + lambda2*tgamma(1 - r2)*pow(fabs(tracking_error), alpha2)*Sign(tracking_error) / pow(Ts, 1 - r2)*Ts;
+	s = (tracking_error - last_tracking_error) / Ts + RL_sum_s;
+	s = s + Ts*(-w1*s - w2*pow(Sign(s), 1));
+
+	if (xi >= xi_max || xi < 0){
+		d_xi = mu1*fabs(s)*Sign(xi_max / 2 - xi);
+	}
+	else{
+		if (fabs(s) >= Delta){
+			eta = tanh(kappa*s / lambda_c);
+			d_xi = mu2*(kappa*k_eta*k_eta / lambda_c)*(1 - eta*eta) / (1 - k_eta*k_eta*eta*eta)*eta / (1 - k_eta*k_eta*eta*eta);
+		}
+		else{
+			d_xi = -mu1 / (fabs(s) + delta);
+		}
+	}
+	xi = xi + d_xi*Ts;
+	M = M0*(1 + kappa1*xi);
+	k = k0*(1 + kappa2*xi);	
+	
+	RL_sum_phi = lambda1*tgamma(1 - r1)* pow(fabs(tracking_error), alpha1)*Sign(tracking_error) / pow(Ts, 1 - r1) + lambda2*tgamma(1 - r2)*pow(fabs(tracking_error), alpha2)*Sign(tracking_error) / pow(Ts, 1 - r2);
+	phi = RL_sum_phi / (1 + kappa1*xi);
+	last_tracking_error = tracking_error;
+}
+
+
+// 计算输入电流
+double Dynamic::ATDC(double & tracking_error)
+{	
+	ATDC_adaptive_law(tracking_error);
+	u1 = ddot_ref + phi + w1*s + w2*pow(fabs(s),p)*Sign(s);
+	u2 = k*fabs(s);
+	u_input = u1 + u2;
+	tau = M*u_input; // +tau - M0*ddot_beta;
+	return tau;
+}
