@@ -12,7 +12,7 @@ using namespace cv;
 using namespace std;
 
 // Time-delay control gain-adapting laws
-void Dynamic::ATDC_adaptive_law(double & tracking_error)
+void Dynamic::Adaptive_law(double & tracking_error)
 {
 	// Update the buffer of function memory
 	if(Func.size() >= N_memory){
@@ -61,7 +61,7 @@ void Dynamic::ATDC_adaptive_law(double & tracking_error)
 }
 
 // Calculation of control input
-double Dynamic::ATDC(double & tracking_error)
+double Dynamic::Controller(double & tracking_error)
 {	
 	ATDC_adaptive_law(tracking_error);
 	u1 = ddot_ref + phi + w1*s + w2*pow(fabs(s),p)*Sign(s);
